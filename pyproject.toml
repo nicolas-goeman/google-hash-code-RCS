@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "google-hash-code-rcs"
+version = "0.1.0"
+description = ""
+authors = ["Nicolas GOEMAN <nicolas.goemn@gmail.com>"]
+readme = "README.md"
+packages = [{include = "google_hash_code_rcs"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
