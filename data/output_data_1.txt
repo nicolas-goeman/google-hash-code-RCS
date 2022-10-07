@@ -1,0 +1,8 @@
+2
+2
+move sc 2
+impl foo 2
+3
+wait 2
+impl bar 1
+impl bar 2
