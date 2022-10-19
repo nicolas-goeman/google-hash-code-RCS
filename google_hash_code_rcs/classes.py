@@ -5,16 +5,16 @@ class Binary:
         self.services = []
         self.engineers = []
     
-    def add_engineer(self, engineer) -> None:
+    def add_engineer(self, engineer) -> None:  # pragma: no cover
         self.engineers.append(engineer)
     
-    def remove_engineer(self, engineer) -> None:
+    def remove_engineer(self, engineer) -> None:  # pragma: no cover
         self.engineers.remove(engineer)
     
-    def get_n_services(self) -> int:
+    def get_n_services(self) -> int:  # pragma: no cover
         return len(self.services)
 
-    def get_n_engineers(self) -> int:
+    def get_n_engineers(self) -> int:  # pragma: no cover
         return len(self.engineers)
     
 
@@ -23,7 +23,7 @@ class Service:
         self.binary = binary
         self.features = []
     
-    def add_feature(self, feature) -> None:
+    def add_feature(self, feature) -> None:  # pragma: no cover
         self.features.append(feature)
 
 
@@ -36,7 +36,7 @@ class Feature:
         self.users = users
         self.difficulty = difficulty
     
-    def add_service(self, service: Service) -> None:
+    def add_service(self, service: Service) -> None:  # pragma: no cover
         self.services.append(service)
         service.add_feature(self)
 
