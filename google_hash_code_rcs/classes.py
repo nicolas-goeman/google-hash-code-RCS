@@ -30,18 +30,19 @@ class Binary:
 
 
 class Service:
-    def __init__(self, name, binary) -> None:
+    def __init__(self, name, binary: Binary) -> None:
         self.name = name
         self.binary = binary
+        self.binary.add_service(self)
         self.features = []
     
     def add_feature(self, feature) -> None:  # pragma: no cover
         self.features.append(feature)
-        print(self.features)
 
 
 class Feature:
-    def __init__(self, services: list[Service], users: int, difficulty: int) -> None:
+    def __init__(self, services: list[Service], users: int, difficulty: int, name: str) -> None:
+        self.name = name
         self.services = []
         for service in services:
             self.add_service(service)
@@ -55,6 +56,9 @@ class Feature:
     
     def is_launched(self) -> Boolean:
         return len(self.services) == 0
+    
+    def remove_service(self, service) -> None:  # pragma: no cover
+        self.services.remove(service)
 
 # ================================== #
 #           ENGINEER CLASS           #
@@ -71,32 +75,39 @@ class Engineer:
 #           TASKS CLASSES            #
 # ================================== #
 
-class ImplementFeature:
+class Task:
+    def __init__(self, type):
+        self.type = type
+
+class ImplementFeature(Task):
     def __init__(self, feature: Feature, binary: Binary, engineer: Engineer) -> None:
+        super().__init__(type="ImpFeat")
         self.feature = feature
         self.binary = binary
         self.engineer = engineer
+
+        self.engineer.is_available = False
 
         self.total_days = self.compute_difficulty()
         self.remaining_days = self.total_days
         
         self.binary.engineers.append(engineer)
 
+        self.engineer.tasks.append(self)
         self.engineer.current_task = self
     
     def compute_difficulty(self) -> int:
         return self.feature.difficulty + len(self.binary.services) + len(self.binary.engineers)
 
-class Wait:
+class Wait(Task):    
     def __init__(self, days: int, engineer: Engineer) -> None:
+        super().__init__(type="Wait")
         self.engineer = engineer
         
+        self.engineer.is_available = False
+
         self.total_days = days
         self.remaining_days = self.total_days
 
+        self.engineer.tasks.append(self)
         self.engineer.current_task = self
-
-
-
-
-
