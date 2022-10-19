@@ -39,7 +39,7 @@ jobs:
         #   PYTHONPATH=src/ poetry run pytest
         #   pip install coverage[toml]
         run: |
-          PYTHONPATH=python_labs/ poetry run python -m pytest -v --cov=python_labs/ tests/ --cov-fail-under=80
+          PYTHONPATH=google_hash_code_rcs/ poetry run python -m pytest -v --cov=google_hash_code_rcs/ tests/ --cov-fail-under=80
           pip install coverage[toml]
         
 
