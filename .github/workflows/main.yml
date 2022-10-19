@@ -1,0 +1,74 @@
+# Checks that we can build and validate the Unittest
+
+name: Run pytest and coverage badge
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: ~/.virtualenvs
+          key: poetry-$
+          restore-keys: |
+            poetry-$
+      - name: Config Github URL to download Private Repo
+        env:
+          GITHUB_TOKEN: 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
+        run: git config --global url."https://$GITHUB_TOKEN@github.com/".insteadOf "https://github.com/"
+
+      - name: Install Dependencies using Poetry
+        run: poetry install
+        if: steps.cache.outputs.cache-hit != 'true'
+
+      - name: Run pytest
+        # run: |
+        #   PYTHONPATH=src/ poetry run pytest
+        #   pip install coverage[toml]
+        run: |
+          PYTHONPATH=python_labs/ poetry run python -m pytest -v --cov=python_labs/ tests/ --cov-fail-under=80
+          pip install coverage[toml]
+        
+
+      # - name: Run Coverage
+      #   run: PYTHONPATH=dev/ poetry run pytest --cov .
+
+#       - name: Generate XML Report
+#         run: PYTHONPATH=src/ poetry run python -m coverage xml
+      
+      - name: Coverage Badge
+        uses: tj-actions/coverage-badge-py@v1.8
+        
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v9
+        id: changed_files
+        with:
+          files: coverage.svg
+
+      - name: Commit files
+        if: steps.changed_files.outputs.files_changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add coverage.svg
+          git commit -m "Updated coverage.svg"
+      - name: Push changes
+        if: steps.changed_files.outputs.files_changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          branch: ${{ github.ref }}
+
